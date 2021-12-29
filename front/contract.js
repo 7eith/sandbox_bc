@@ -11,13 +11,238 @@ const contractABI = [
 		"type": "constructor"
 	},
 	{
-		"inputs": [],
-		"name": "getName",
-		"outputs": [
+		"inputs": [
 			{
 				"internalType": "string",
-				"name": "",
+				"name": "_name",
 				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_desc",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_power",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_health",
+				"type": "uint256"
+			}
+		],
+		"name": "createBoss",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_desc",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_power",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_health",
+				"type": "uint256"
+			}
+		],
+		"name": "createCoach",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_desc",
+				"type": "string"
+			}
+		],
+		"name": "createFighter",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getBosses",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "desc",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "power",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "health",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "rank",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct WishFighter.Boss[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getCoachs",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "desc",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "power",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "health",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct WishFighter.Coach[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getPlayerData",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "balance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "win",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lost",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "desc",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "power",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "health",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct WishFighter.Coach",
+						"name": "coach",
+						"type": "tuple"
+					},
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "desc",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "power",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "health",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct WishFighter.Fighter",
+						"name": "fighter",
+						"type": "tuple"
+					}
+				],
+				"internalType": "struct WishFighter.Player",
+				"name": "",
+				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
@@ -31,7 +256,7 @@ const contractABI = [
 				"type": "string"
 			}
 		],
-		"name": "setName",
+		"name": "register",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -122,14 +347,16 @@ async function fetchAccountData() {
   // with Ethereum node, we do not want to display any results
   // until data for all accounts is loaded
   await Promise.all(rowResolvers);
+  
 
   // Display fully loaded UI for wallet data
   document.querySelector("#prepare").style.display = "none";
   document.querySelector("#connected").style.display = "block";
 
-  MyContract = new web3.eth.Contract(contractABI, "0xA86543FE9fa4ed46e9460589b116b99Eb9b6b896");
+  MyContract = new web3.eth.Contract(contractABI, "0x37E021e56203B34e770BCb8794FF49E192daaACB");
 
-  let name = await MyContract.methods.getName().call();
+  // let name = await MyContract.methods.getName().call();
+  let name = "see";
 
   document.querySelector("#nameContainer").innerHTML = `Name: ${name}`;
 
@@ -226,15 +453,16 @@ async function setName() {
   const newName = document.querySelector("#setNameInput").value;
 
   console.log("set Name!")
-  await MyContract.methods.setName(newName).send({
-    from: selectedAccount
+  await MyContract.methods.createFighter(newName, "Desc per default").send({
+    from: selectedAccount,
+    value: '020000000000000000'
   });
 
   console.log(newName)
 
-  let name = await MyContract.methods.getName().call();
+  // let name = await MyContract.methods.getName().call();
 
-  document.querySelector("#nameContainer").innerHTML = `Name: ${name}`;
+  // document.querySelector("#nameContainer").innerHTML = `Name: ${name}`;
 }
 
 
