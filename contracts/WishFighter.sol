@@ -68,11 +68,16 @@ contract WishFighter
 
 	address payable owner;
 
+	uint	private amount;
+
+	error NotEnoughEther();
+
     constructor() { 
 
 		owner = payable(msg.sender);
 
 		coachLength = 0;
+		amount = 1000000000;
 		bossLength = 0;
 
 		createCoach("Yourself", "you against world", 5, 5);
@@ -147,14 +152,24 @@ contract WishFighter
 	{
 		Player storage player = players[msg.sender];
 
+		player.name = "Seith";
+		player.lost = 0;
+		player.win = 0;
+		// player.
 		player.fighter.name = _name;
 		player.fighter.desc = _desc;
 		player.fighter.power = 1;
 		player.fighter.health = 5;
 
 		// owner.transfer(msg.value);
-		(bool success,) = owner.call{value: msg.value}("");
-    	require(success, "Failed to send money");
+
+		if (msg.value < amount)
+			revert NotEnoughEther();
+
+		if (msg.value > amount)
+            payable(msg.sender).transfer(msg.value - amount);
+		// (bool success,) = owner.call{value: msg.value}("");
+    	// require(success, "Failed to send money");
 		// owner.transfer()
 	}
 

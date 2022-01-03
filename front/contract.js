@@ -272,7 +272,7 @@ let web3Modal
 // Chosen wallet provider given by the dialog window
 let provider;
 
-let MyContract;
+let GameContract;
 // Address of the selected account
 let selectedAccount;
 
@@ -347,18 +347,22 @@ async function fetchAccountData() {
   // with Ethereum node, we do not want to display any results
   // until data for all accounts is loaded
   await Promise.all(rowResolvers);
-  
 
   // Display fully loaded UI for wallet data
   document.querySelector("#prepare").style.display = "none";
   document.querySelector("#connected").style.display = "block";
 
-  MyContract = new web3.eth.Contract(contractABI, "0x37E021e56203B34e770BCb8794FF49E192daaACB");
+  GameContract = new web3.eth.Contract(contractABI, "0x6B53e8AD6950281F67BA9880F96b46Fca584fb40");
 
   // let name = await MyContract.methods.getName().call();
   let name = "see";
 
-  document.querySelector("#nameContainer").innerHTML = `Name: ${name}`;
+  let Profile = await GameContract.methods.getPlayerData().call();
+  console.log(Profile)
+
+  document.querySelector("#player-name").innerHTML = `${Profile.name}`;
+  document.querySelector("#player-balance").innerHTML = `${Profile.balance}`;
+  document.querySelector("#figther-name").innerHTML = `${Profile.fighter.name}`;
 
   // Purge UI elements any previously loaded accounts
   // accountContainer.innerHTML = name;
@@ -453,9 +457,9 @@ async function setName() {
   const newName = document.querySelector("#setNameInput").value;
 
   console.log("set Name!")
-  await MyContract.methods.createFighter(newName, "Desc per default").send({
+  await GameContract.methods.createFighter(newName, "Desc per default").send({
     from: selectedAccount,
-    value: '020000000000000000'
+    value: '1000000000'
   });
 
   console.log(newName)
